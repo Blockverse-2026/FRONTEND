@@ -1,0 +1,11 @@
+{
+  "colors": {
+    "bg": "#03080F",
+    "accent": "#00E5FF",
+    "danger": "#FF2B48"
+  },
+  "fonts": {
+    "primary": "'Orbitron', sans-serif",
+    "secondary": "'Space Mono', monospace"
+  }
+}

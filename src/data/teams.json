@@ -1,0 +1,4 @@
+[
+  {"teamId":"CYBER_01","name":"Team Alpha","points":150,"tokens":28,"clues":[3,9],"fragments":[1,4],"connected":true, "password": "password123"},
+  {"teamId":"CYBER_02","name":"Team Beta","points":100,"tokens":10,"clues":[],"fragments":[],"connected":false, "password": "password123"}
+]

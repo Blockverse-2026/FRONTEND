@@ -1,0 +1,5 @@
+[
+  {"anomalyId":"A", "name": "Sequence Anomaly", "status": "active", "requiredClues": [3]},
+  {"anomalyId":"B", "name": "Cipher Anomaly", "status": "locked", "requiredClues": []},
+  {"anomalyId":"C", "name": "Nash Anomaly", "status": "locked", "requiredClues": []}
+]

@@ -1,0 +1,12 @@
+[
+  {"puzzleId":1, "round":1, "type":"input", "question":"Decrypt the firewall key.", "answer":"FIREWALL", "rewardPoints":10, "fragmentId":1},
+  {"puzzleId":2, "round":1, "type":"input", "question":"What is the port number for HTTP?", "answer":"80", "rewardPoints":5, "fragmentId":2},
+  {"puzzleId":3, "round":1, "type":"sequence", "question":"1, 2, 4, 8, ...", "answer":"16", "rewardPoints":3, "fragmentId":4},
+  {"puzzleId":4, "round":1, "type":"input", "question":"Standard protocol for sending email.", "answer":"SMTP", "rewardPoints":5, "fragmentId":5},
+  {"puzzleId":5, "round":1, "type":"sequence", "question":"Binary: 0, 1, 10, 11, ...", "answer":"100", "rewardPoints":5, "fragmentId":6},
+  {"puzzleId":6, "round":1, "type":"input", "question":"The 'S' in HTTPS stands for?", "answer":"SECURE", "rewardPoints":5, "fragmentId":7},
+  {"puzzleId":7, "round":1, "type":"input", "question":"Common command to check network connectivity.", "answer":"PING", "rewardPoints":5, "fragmentId":8},
+  {"puzzleId":8, "round":1, "type":"input", "question":"Main protocol of the internet (acronym).", "answer":"TCP/IP", "rewardPoints":10, "fragmentId":9},
+  {"puzzleId":9, "round":1, "type":"sequence", "question":"Fibonacci: 1, 1, 2, 3, 5, ...", "answer":"8", "rewardPoints":5, "fragmentId":10},
+  {"puzzleId":10, "round":1, "type":"input", "question":"A program that replicates itself across a network.", "answer":"WORM", "rewardPoints":10, "fragmentId":11}
+]
