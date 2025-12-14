@@ -26,7 +26,12 @@ const Landing = () => {
       
       <motion.h2 
         variants={fadeInUp}
-        className="text-xl md:text-2xl text-accent/80 mb-12 tracking-widest uppercase font-orbitron"
+        whileHover={{ 
+          scale: 1.05,
+          textShadow: "0 0 8px rgb(0, 229, 255), -2px 0 #ff00c1, 2px 0 #00fff9"
+        }}
+        className="text-xl md:text-3xl text-accent/80 mb-12 tracking-widest uppercase font-orbitron glitch cursor-default transition-colors duration-300"
+        data-text="Enter Genova Realm"
       >
         Enter Genova Realm
       </motion.h2>
@@ -40,12 +45,15 @@ const Landing = () => {
       </motion.div>
 
       <motion.div variants={fadeInUp}>
-        <NeonButton onClick={() => navigate('/login')} className="text-xl px-12 py-4">
+        <NeonButton 
+          onClick={() => navigate('/login')} 
+          className="text-2xl px-16 py-6 font-bold tracking-[0.2em]"
+        >
           Initialize Connection &gt;&gt;
         </NeonButton>
       </motion.div>
       
-      {/* Decorative Grid Floor */}
+      {}
       <motion.div 
         initial={{ opacity: 0, rotateX: 90 }}
         animate={{ opacity: 0.2, rotateX: 60 }}

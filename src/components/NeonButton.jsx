@@ -3,7 +3,15 @@ import { motion } from 'framer-motion';
 
 const scaleOnHover = {
   initial: { scale: 1 },
-  hover: { scale: 1.05 },
+  hover: { 
+    scale: 1.1,
+    boxShadow: "0 0 25px rgba(0, 229, 255, 0.6)",
+    transition: {
+      type: "spring",
+      stiffness: 400,
+      damping: 10
+    }
+  },
   tap: { scale: 0.95 }
 };
 

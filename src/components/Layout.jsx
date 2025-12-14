@@ -10,14 +10,14 @@ const Layout = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <div className="min-h-screen bg-background text-white font-spacemono relative overflow-hidden selection:bg-accent selection:text-background">
+    <div className="min-h-screen bg-background text-white font-spacemono relative overflow-x-hidden selection:bg-accent selection:text-background">
       <LoadingScreen onLoadComplete={() => setIsLoading(false)} />
       
       {!isLoading && (
         <>
           <div className="scanlines"></div>
           <div className="vignette"></div>
-          <div className="relative z-10 p-4 md:p-8 min-h-screen flex flex-col">
+          <div className="relative z-10 p-4 md:p-8 min-h-screen flex flex-col max-w-7xl mx-auto w-full">
             <Outlet />
           </div>
           <StoryGuide />

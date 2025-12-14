@@ -10,26 +10,32 @@
 }
 
 html {
-  font-size: 18px; /* Increase base font size */
+  font-size: 18px;
 }
 
 body {
-  background-color: var(--bg);
+  background-color: #0A0A0A;
   color: #ffffff;
   font-family: 'Space Mono', monospace;
   overflow-x: hidden;
   /* Cyberpunk Grid Background */
   background-image: 
-    linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
+    linear-gradient(rgba(0, 229, 255, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.2) 1px, transparent 1px);
   background-size: 40px 40px;
+  animation: grid-drift 80s linear infinite;
+}
+
+@keyframes grid-drift {
+  0% { background-position: 0 0; }
+  100% { background-position: 40px 40px; }
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Orbitron', sans-serif;
 }
 
-/* Custom Scrollbar */
+
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -48,7 +54,7 @@ h1, h2, h3, h4, h5, h6 {
   background: #00b8cc;
 }
 
-/* Glitch Effect */
+
 .glitch {
   position: relative;
 }
