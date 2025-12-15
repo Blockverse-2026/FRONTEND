@@ -11,7 +11,14 @@ export const GameProvider = ({ children }) => {
   const [team, setTeam] = useState(null);
   const [tokens, setTokens] = useState(0);
   const [points, setPoints] = useState(0);
-  const [puzzles, setPuzzles] = useState(puzzlesData.map(p => ({...p, solved: false})));
+  const [puzzles, setPuzzles] = useState(
+  puzzlesData.map((p, index) => ({
+    ...p,
+    solved: false,
+    unlocked: index === 0 
+  }))
+);
+
   const [finaleActive, setFinaleActive] = useState(false);
   const [notification, setNotification] = useState({ isOpen: false, message: '', type: 'info' });
 
@@ -45,13 +52,25 @@ export const GameProvider = ({ children }) => {
     const handlePuzzleResult = (data) => {
       showNotification(data.message, data.success ? 'success' : 'error');
       if (data.success) {
-        setPuzzles(prev => prev.map(p => p.puzzleId === data.puzzleId ? { ...p, solved: true } : p));
+        setPuzzles(prev => {
+          return prev.map((p, index) => {
+            if (p.puzzleId === data.puzzleId) {
+              return { ...p, solved: true, unlocked: true };
+            }
+            const solvedIndex = prev.findIndex(
+              x => x.puzzleId === data.puzzleId
+            );
+            if (index === solvedIndex + 1) {
+              return { ...p, unlocked: true };
+            }
+            return p;
+          });
+        });
         setPoints(prev => prev + data.rewardPoints);
       }
     };
-
     const handleTokensUpdated = (data) => {
-        setTokens(data.tokens);
+      setTokens(data.tokens);
     };
 
     const handleFinaleTrigger = (data) => {

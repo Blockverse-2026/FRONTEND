@@ -31,7 +31,14 @@ const Round1 = () => {
                 <FirewallBlock 
                     key={puzzle.puzzleId} 
                     id={puzzle.puzzleId} 
-                    status={puzzle.solved ? 'solved' : 'locked'} 
+                    status={
+                      puzzle.solved
+                      ? "solved"
+                      : puzzle.unlocked
+                      ? "unlocked"
+                      : "locked"
+                    }
+
                     onClick={handleBlockClick}
                 />
             ))}
