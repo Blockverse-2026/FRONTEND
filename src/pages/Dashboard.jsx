@@ -53,18 +53,34 @@ const Dashboard = () => {
         </HoloPanel>
 
         {/* Active Rounds */}
-        <HoloPanel title="Active Missions">
+        <HoloPanel title="Active Missions" className="" data-guide-id="active-missions">
           <div className="space-y-4">
-            <HoloButton onClick={() => navigate('/round1')} className="w-full text-left">
+            <HoloButton 
+              onClick={() => navigate('/round1')} 
+              variant="light"
+              className="w-full text-left !text-lg"
+            >
               Round 1 - Firewall
             </HoloButton>
-            <HoloButton onClick={() => navigate('/round2')} className="w-full text-left">
+            <HoloButton 
+              onClick={() => navigate('/round2')} 
+              variant="light"
+              className="w-full text-left !text-lg"
+            >
               Round 2 - Marketplace
             </HoloButton>
-            <HoloButton onClick={() => navigate('/round3')} className="w-full text-left">
+            <HoloButton 
+              onClick={() => navigate('/round3')} 
+              variant="light"
+              className="w-full text-left !text-lg"
+            >
               Round 3 - Anomaly
             </HoloButton>
-            <HoloButton onClick={() => navigate(`/chat/${team.teamId}`)} className="w-full text-left !border-purple-500/30 !text-purple-300">
+            <HoloButton 
+              onClick={() => navigate(`/chat/${team.teamId}`)} 
+              variant="purple"
+              className="w-full text-left !text-lg"
+            >
               Secure Chat
             </HoloButton>
           </div>

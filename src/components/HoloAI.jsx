@@ -11,7 +11,7 @@ const HoloAI = () => {
       setText(fullText.slice(0, index + 1));
       index++;
       if (index >= fullText.length) {
-          // Pause then restart
+        
           setTimeout(() => { 
             index = 0; 
             setText('');

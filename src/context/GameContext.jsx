@@ -13,6 +13,8 @@ export const GameProvider = ({ children }) => {
   const [points, setPoints] = useState(0);
   const [puzzles, setPuzzles] = useState(puzzlesData.map(p => ({...p, solved: false})));
   const [finaleActive, setFinaleActive] = useState(false);
+  const [introPlayed, setIntroPlayed] = useState(false);
+  const [lang, setLang] = useState('en');
   const [notification, setNotification] = useState({ isOpen: false, message: '', type: 'info' });
 
   const showNotification = (message, type = 'info') => {
@@ -90,6 +92,10 @@ export const GameProvider = ({ children }) => {
       points, 
       puzzles, 
       finaleActive,
+      introPlayed,
+      setIntroPlayed,
+      lang,
+      setLang,
       notification,
       showNotification,
       closeNotification, 

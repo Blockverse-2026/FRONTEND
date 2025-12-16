@@ -32,6 +32,7 @@ const Landing = () => {
         }}
         className="text-xl md:text-3xl text-accent/80 mb-12 tracking-widest uppercase font-orbitron glitch cursor-default transition-colors duration-300"
         data-text="Enter Genova Realm"
+        data-guide-id="enter-realm"
       >
         Enter Genova Realm
       </motion.h2>

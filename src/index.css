@@ -101,7 +101,6 @@ h1, h2, h3, h4, h5, h6 {
   100% { clip: rect(30px, 9999px, 60px, 0); }
 }
 
-/* Scanlines */
 .scanlines {
   background: linear-gradient(
     to bottom,
@@ -120,7 +119,6 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 9999;
 }
 
-/* Vignette */
 .vignette {
   position: fixed;
   top: 0;
@@ -132,7 +130,6 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 9998;
 }
 
-/* Cyberpunk Utilities */
 .neon-text {
   text-shadow: 0 0 5px var(--accent), 0 0 10px var(--accent), 0 0 20px var(--accent);
 }

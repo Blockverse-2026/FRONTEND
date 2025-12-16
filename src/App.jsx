@@ -13,7 +13,6 @@ import Chat from './pages/Chat';
 import Admin from './pages/Admin';
 import FinaleOverlay from './components/FinaleOverlay';
 
-// Wrapper to inject global finale overlay
 const AppContent = () => {
   const { finaleActive } = useGame();
   

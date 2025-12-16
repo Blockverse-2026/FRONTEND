@@ -1,130 +1,240 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import NeonButton from './NeonButton';
+import { useGame } from '../context/GameContext';
 
 const AVATAR_URL = "https://images.unsplash.com/photo-1514846326710-1f9e3e6f34f5?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80";
 
-const SCRIPTS = {
-  '/': [
-    "Agent, connection established.",
-    "I am ANA, your handler for this mission.",
-    "The BlockVerse protocol has been compromised.",
-    "Initialize your connection to begin."
-  ],
+const GUIDE_STEPS = {
   '/dashboard': [
-    "Welcome to the Grid, Agent.",
-    "This is your Dashboard. Monitor your Fragments here.",
-    "We need to recover Data Fragments to rewrite the protocol.",
-    "Proceed to Round 1 when ready."
+    { id: 'missions', selector: '[data-guide-id=\"active-missions\"]', titleKey: 'missions_title', contentKey: 'missions_body', placement: 'right', delay: 150 }
   ],
   '/round1': [
-    "The Firewall Grid is active.",
-    "Red nodes are encrypted. Click them to bypass security.",
-    "Solve the ciphers to earn Points and Fragments.",
-    "Watch out for false positives."
-  ],
-  '/round2': [
-    "The Black Market is currently offline.",
-    "We are detecting signal interference.",
-    "Stand by for updates."
-  ],
-  '/admin': [
-    "Administrator Access Detected.",
-    "WARNING: The Finale Protocol is irreversible.",
-    "Use with extreme caution."
+    { id: 'grid', selector: '[data-guide-id=\"round1-grid\"]', titleKey: 'grid_title', contentKey: 'grid_body', placement: 'right', delay: 150 },
+    { id: 'log', selector: '[data-guide-id=\"mission-log\"]', titleKey: 'log_title', contentKey: 'log_body', placement: 'left', delay: 150 }
   ]
+};
+
+const I18N = {
+  en: {
+    enter_title: 'Enter Genova Realm',
+    enter_body: 'Start the connection sequence from here.',
+    missions_title: 'Active Missions',
+    missions_body: 'Launch rounds and access Secure Chat.',
+    grid_title: 'Firewall Grid',
+    grid_body: 'Tap a red node to attempt a bypass.',
+    log_title: 'Mission Log',
+    log_body: 'Objectives and system status are summarized here.',
+    next: 'Next',
+    prev: 'Previous',
+    skip: 'Skip',
+    done: 'Done'
+  },
+  es: {
+    enter_title: 'Entrar al Reino Genova',
+    enter_body: 'Inicia la secuencia de conexión aquí.',
+    missions_title: 'Misiones Activas',
+    missions_body: 'Inicia rondas y accede al Chat Seguro.',
+    grid_title: 'Cortafuegos',
+    grid_body: 'Pulsa un nodo rojo para intentar el acceso.',
+    log_title: 'Registro de Misión',
+    log_body: 'Resumen de objetivos y estado del sistema.',
+    next: 'Siguiente',
+    prev: 'Anterior',
+    skip: 'Saltar',
+    done: 'Hecho'
+  }
 };
 
 const StoryGuide = () => {
   const location = useLocation();
+  const { lang = 'en' } = useGame();
   const [isOpen, setIsOpen] = useState(false);
-  const [currentScript, setCurrentScript] = useState([]);
-  const [step, setStep] = useState(0);
-  const [displayedText, setDisplayedText] = useState('');
+  const [steps, setSteps] = useState([]);
+  const [stepIndex, setStepIndex] = useState(0);
+  const [targetRect, setTargetRect] = useState(null);
+  const [delayedReady, setDelayedReady] = useState(false);
+  const [panelPos, setPanelPos] = useState({ left: 24, top: 24 });
+  const overlayRef = useRef(null);
+
+  const t = (key) => (I18N[lang] && I18N[lang][key]) || I18N.en[key];
+
+  const storageKey = (suffix) => `guide:${location.pathname}:${suffix}:${lang}`;
+  const metricsKey = () => `guideMetrics:${location.pathname}:${lang}`;
+
+  const recordMetric = (type) => {
+    const raw = localStorage.getItem(metricsKey());
+    const data = raw ? JSON.parse(raw) : { views: 0, skips: 0, completes: 0 };
+    if (type === 'view') data.views += 1;
+    if (type === 'skip') data.skips += 1;
+    if (type === 'complete') data.completes += 1;
+    localStorage.setItem(metricsKey(), JSON.stringify(data));
+  };
 
   useEffect(() => {
-    const script = SCRIPTS[location.pathname];
-    if (script) {
-      setCurrentScript(script);
-      setStep(0);
+    const completed = localStorage.getItem(storageKey('completed')) === 'true';
+    const routeSteps = GUIDE_STEPS[location.pathname] || [];
+    setSteps(routeSteps);
+    if (routeSteps.length && !completed) {
       setIsOpen(true);
-      setDisplayedText('');
+      setStepIndex(Number(localStorage.getItem(storageKey('step')) || 0));
+      recordMetric('view');
     } else {
       setIsOpen(false);
     }
-  }, [location.pathname]);
+  }, [location.pathname, lang]);
 
   useEffect(() => {
-    if (!isOpen || !currentScript[step]) return;
+    if (!isOpen || !steps[stepIndex]) return;
+    const delay = steps[stepIndex].delay || 0;
+    const timer = setTimeout(() => setDelayedReady(true), delay);
+    return () => clearTimeout(timer);
+  }, [isOpen, steps, stepIndex]);
 
-    let index = 0;
-    const text = currentScript[step];
-    setDisplayedText('');
-    
-    const interval = setInterval(() => {
-      setDisplayedText(text.slice(0, index + 1));
-      index++;
-      if (index === text.length) clearInterval(interval);
-    }, 30);
+  useEffect(() => {
+    if (!isOpen || !steps[stepIndex] || !delayedReady) return;
+    const target = document.querySelector(steps[stepIndex].selector);
+    if (target) {
+      const rect = target.getBoundingClientRect();
+      setTargetRect({ x: rect.left, y: rect.top, w: rect.width, h: rect.height });
+      const panelW = 360;
+      const panelH = 220;
+      const margin = 16;
+      const viewportW = window.innerWidth;
+      const viewportH = window.innerHeight;
+      let left = 24;
+      let top = 24;
+      if (viewportW - (rect.right + margin) >= panelW + 24) {
+        left = rect.right + margin;
+        top = Math.min(rect.top, viewportH - panelH - 24);
+      } else if (viewportH - (rect.bottom + margin) >= panelH + 24) {
+        left = Math.min(Math.max(24, rect.left), viewportW - panelW - 24);
+        top = rect.bottom + margin;
+      } else if (rect.left - margin >= panelW + 24) {
+        left = rect.left - panelW - margin;
+        top = Math.min(rect.top, viewportH - panelH - 24);
+      } else {
+        left = Math.min(Math.max(24, rect.left), viewportW - panelW - 24);
+        top = Math.max(24, rect.top - panelH - margin);
+      }
+      setPanelPos({ left, top });
+    } else {
+      setTargetRect(null);
+      setPanelPos({ left: 24, top: 24 });
+    }
+  }, [isOpen, steps, stepIndex, delayedReady]);
 
-    return () => clearInterval(interval);
-  }, [step, isOpen, currentScript]);
+  useEffect(() => {
+    const onResize = () => {
+      if (!isOpen || !steps[stepIndex]) return;
+      const target = document.querySelector(steps[stepIndex].selector);
+      if (target) {
+        const rect = target.getBoundingClientRect();
+        setTargetRect({ x: rect.left, y: rect.top, w: rect.width, h: rect.height });
+      }
+    };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [isOpen, steps, stepIndex]);
+
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (!isOpen) return;
+      if (e.key === 'ArrowRight') handleNext();
+      if (e.key === 'ArrowLeft') handlePrev();
+      if (e.key === 'Escape') handleSkip();
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [isOpen, stepIndex, steps]);
 
   const handleNext = () => {
-    if (step < currentScript.length - 1) {
-      setStep(step + 1);
+    if (stepIndex < steps.length - 1) {
+      const next = stepIndex + 1;
+      setStepIndex(next);
+      localStorage.setItem(storageKey('step'), String(next));
+      setDelayedReady(false);
     } else {
+      localStorage.setItem(storageKey('completed'), 'true');
+      recordMetric('complete');
       setIsOpen(false);
     }
+  };
+
+  const handlePrev = () => {
+    const prev = Math.max(0, stepIndex - 1);
+    setStepIndex(prev);
+    localStorage.setItem(storageKey('step'), String(prev));
+    setDelayedReady(false);
+  };
+
+  const handleSkip = () => {
+    localStorage.setItem(storageKey('completed'), 'true');
+    recordMetric('skip');
+    setIsOpen(false);
   };
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div 
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 50 }}
-          className="fixed bottom-8 right-8 z-50 flex flex-col items-end max-w-sm"
-        >
-          {/* Character Container */}
-          <div className="relative w-32 h-32 mb-[-20px] mr-4 z-10">
-            <div className="absolute inset-0 bg-accent/20 rounded-full blur-xl animate-pulse"></div>
-            <div className="w-full h-full rounded-full border-2 border-accent/50 overflow-hidden relative shadow-[0_0_15px_rgba(0,229,255,0.5)] bg-black">
-                <img 
-                    src={AVATAR_URL} 
-                    alt="ANA Handler" 
-                    className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-30 mix-blend-overlay"></div>
-            </div>
-            {/* Status Indicator */}
-            <div className="absolute bottom-2 right-2 w-3 h-3 bg-green-500 rounded-full border border-black animate-ping"></div>
-            <div className="absolute bottom-2 right-2 w-3 h-3 bg-green-500 rounded-full border border-black"></div>
-          </div>
+        <>
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.75 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black z-40"
+            aria-hidden="true"
+          />
 
-          {/* Dialogue Box */}
-          <div className="bg-black/90 border border-accent p-6 rounded-tl-xl rounded-bl-xl rounded-br-xl shadow-[0_0_20px_rgba(0,229,255,0.2)] backdrop-blur-md relative">
-            <div className="absolute top-0 right-0 p-2">
-                <button onClick={() => setIsOpen(false)} className="text-white/30 hover:text-white text-xs">✕</button>
+          {targetRect && (
+            <div 
+              ref={overlayRef}
+              className="fixed z-50 pointer-events-none"
+              style={{ 
+                left: targetRect.x - 8, 
+                top: targetRect.y - 8, 
+                width: targetRect.w + 16, 
+                height: targetRect.h + 16 
+              }}
+            >
+              <div className="w-full h-full rounded-md border-2 border-cyan-400 shadow-[0_0_20px_rgba(0,229,255,0.6)]" />
             </div>
-            <h4 className="text-accent text-xs font-orbitron mb-2 tracking-widest">HANDLER: ANA</h4>
-            <p className="font-spacemono text-sm text-white min-h-[60px] leading-relaxed">
-              {displayedText}
-              <span className="animate-pulse text-accent">_</span>
+          )}
+
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 30 }}
+            role="dialog"
+            aria-label="In-game guide"
+            className="fixed z-50 max-w-sm p-6 bg-black/95 border border-cyan-500/50 rounded shadow-[0_0_25px_rgba(0,229,255,0.5)] backdrop-blur-md text-white overflow-hidden"
+            style={{ left: panelPos.left, top: panelPos.top, width: 360 }}
+          >
+            <h4 className="text-cyan-300 font-orbitron text-xs tracking-widest uppercase mb-2">
+              {t(steps[stepIndex]?.titleKey)}
+            </h4>
+            <p className="text-white/95 font-spacemono text-sm leading-relaxed">
+              {t(steps[stepIndex]?.contentKey)}
             </p>
-            <div className="mt-4 flex justify-end">
-              <NeonButton 
-                onClick={handleNext} 
-                className="text-xs px-4 py-1 !border-accent/50"
+
+            <div className="mt-4 flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                <NeonButton onClick={handlePrev} className="text-xs px-3 py-1">{t('prev')}</NeonButton>
+                <NeonButton onClick={handleNext} className="text-xs px-3 py-1">
+                  {stepIndex < steps.length - 1 ? t('next') : t('done')}
+                </NeonButton>
+              </div>
+              <button 
+                onClick={handleSkip}
+                className="text-white/70 hover:text-white text-xs font-spacemono"
+                aria-label="Skip guide"
               >
-                {step < currentScript.length - 1 ? 'NEXT >>' : 'ACKNOWLEDGED'}
-              </NeonButton>
+                {t('skip')}
+              </button>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </>
       )}
     </AnimatePresence>
   );
