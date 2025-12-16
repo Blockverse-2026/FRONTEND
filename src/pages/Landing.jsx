@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import NeonButton from '../components/NeonButton';
@@ -7,9 +7,16 @@ import { staggerContainer, fadeInUp, textReveal, glitchVariant } from '../utils/
 const Landing = () => {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    document.body.classList.add('no-scroll');
+    return () => {
+      document.body.classList.remove('no-scroll');
+    };
+  }, []);
+
   return (
     <motion.div 
-      className="flex flex-col items-center justify-center min-h-[80vh] text-center relative"
+      className="relative flex flex-col items-center justify-center h-screen overflow-hidden text-center"
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
@@ -24,18 +31,20 @@ const Landing = () => {
         <div className="absolute inset-0 text-accent/20 blur-[2px] animate-pulse" aria-hidden="true">BLOCKVERSE</div>
       </motion.div>
       
+      <div className="hero-title-area">
       <motion.h2 
         variants={fadeInUp}
         whileHover={{ 
           scale: 1.05,
           textShadow: "0 0 8px rgb(0, 229, 255), -2px 0 #ff00c1, 2px 0 #00fff9"
         }}
-        className="text-xl md:text-3xl text-accent/80 mb-12 tracking-widest uppercase font-orbitron glitch cursor-default transition-colors duration-300"
+        className="text-3xl md:text-5xl lg:text-6xl text-accent/80 mb-12 tracking-widest uppercase font-orbitron glitch cursor-default transition-colors duration-300"
         data-text="Enter Genova Realm"
         data-guide-id="enter-realm"
       >
         Enter Genova Realm
       </motion.h2>
+      </div>
 
       <motion.div 
         variants={fadeInUp}

@@ -64,11 +64,11 @@ const CyberWindow = ({ children, title = "SYSTEM ACCESS" }) => {
         <div className="absolute top-0 right-0 h-full w-[2px] bg-gradient-to-b from-purple-500 via-cyan-500 to-accent animate-pulse"></div>
 
         {/* Header */}
-        <div className="relative z-10 w-full p-4 border-b border-accent/30 bg-accent/5 flex justify-between items-center">
-          <h2 className="text-xl font-orbitron tracking-widest text-accent drop-shadow-[0_0_5px_rgba(0,229,255,0.8)]">
+        <div className="relative z-10 w-full p-4 border-b border-accent/30 bg-accent/5 flex items-center justify-center">
+          <h2 className="text-xl font-orbitron tracking-widest text-accent drop-shadow-[0_0_5px_rgba(0,229,255,0.8)] text-center w-full">
             {title}
           </h2>
-          <div className="flex gap-2">
+          <div className="absolute right-4 flex gap-2">
             <div className="w-3 h-3 bg-accent/50 rounded-full animate-ping"></div>
             <div className="w-3 h-3 bg-accent rounded-full"></div>
           </div>

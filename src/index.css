@@ -14,15 +14,24 @@ html {
 }
 
 body {
-  background-color: #0A0A0A;
-  color: #ffffff;
+  background-color: #070A12;
+  color: #eaf7ff;
   font-family: 'Space Mono', monospace;
   overflow-x: hidden;
-  /* Cyberpunk Grid Background */
-  background-image: 
-    linear-gradient(rgba(0, 229, 255, 0.2) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 229, 255, 0.2) 1px, transparent 1px);
-  background-size: 40px 40px;
+  background-image:
+    radial-gradient(600px 300px at 8% 0%, rgba(0, 229, 255, 0.18), transparent 60%),
+    radial-gradient(500px 300px at 92% 100%, rgba(168, 85, 247, 0.14), transparent 65%),
+    radial-gradient(500px 300px at 0% 100%, rgba(255, 0, 193, 0.10), transparent 70%),
+    linear-gradient(rgba(0, 229, 255, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.12) 1px, transparent 1px),
+    url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWNgYGBg+P///38AAwECA/y+1IEAAAAASUVORK5CYII=');
+  background-size: 
+    auto,
+    auto,
+    auto,
+    40px 40px,
+    40px 40px,
+    4px 4px;
   animation: grid-drift 80s linear infinite;
 }
 
@@ -131,11 +140,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .neon-text {
-  text-shadow: 0 0 5px var(--accent), 0 0 10px var(--accent), 0 0 20px var(--accent);
+  color: #e6fbff;
+  text-shadow: 
+    0 0 6px rgba(0, 229, 255, 0.8),
+    0 0 14px rgba(0, 229, 255, 0.6),
+    0 0 24px rgba(0, 229, 255, 0.4);
 }
 
 .neon-border {
-  box-shadow: 0 0 5px var(--accent), inset 0 0 5px var(--accent);
+  box-shadow: 
+    0 0 10px rgba(0, 229, 255, 0.5),
+    inset 0 0 8px rgba(0, 229, 255, 0.25);
   border: 1px solid var(--accent);
 }
 
@@ -144,10 +159,30 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .cyber-panel {
-  background: rgba(3, 8, 15, 0.7);
-  border: 1px solid rgba(0, 229, 255, 0.3);
-  backdrop-filter: blur(5px);
-  box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
+  background: rgba(7, 10, 18, 0.72);
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  backdrop-filter: blur(6px);
+  box-shadow: 
+    0 0 18px rgba(0, 229, 255, 0.16),
+    inset 0 0 18px rgba(0, 229, 255, 0.06);
+  position: relative;
+}
+.cyber-panel::before,
+.cyber-panel::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  pointer-events: none;
+}
+.cyber-panel::before {
+  top: 0;
+  background: linear-gradient(to right, transparent, rgba(0,229,255,0.6), transparent);
+}
+.cyber-panel::after {
+  bottom: 0;
+  background: linear-gradient(to right, transparent, rgba(168,85,247,0.6), transparent);
 }
 
 .cyber-input {
@@ -161,4 +196,20 @@ h1, h2, h3, h4, h5, h6 {
 .cyber-input:focus {
   box-shadow: 0 0 15px var(--accent);
   outline: none;
+}
+
+.no-scroll {
+  overflow: hidden !important;
+}
+.hero-title-area {
+  width: 90vw;
+  max-width: 100vw;
+  min-height: 80vh;
+  display: grid;
+  place-items: center;
+  margin: 0 auto;
+}
+.hero-title-area h2 {
+  font-size: clamp(2.5rem, 7vw, 6rem);
+  line-height: 1.1;
 }
